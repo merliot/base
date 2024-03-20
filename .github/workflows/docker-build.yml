@@ -40,15 +40,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Determine image tag
-        id: determine_tag
-        run: |
-          if [[ "${{ github.ref }}" == "refs/tags/v*" ]]; then
-            echo "::set-output name=tag::${{ github.ref.replace('refs/tags/', '') }}"
-          else
-            echo "::set-output name=tag::latest"
-          fi
-
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
@@ -56,8 +47,6 @@ jobs:
           images: |
             ${{ github.repository }}
             ghcr.io/${{ github.repository }}
-          tags: |
-            type=raw,value=${{ steps.determine_tag.outputs.tag }}
           labels: |
             org.opencontainers.image.title=Merliot Device Base
             org.opencontainers.image.description=Base docker image to build Merliot devices
